@@ -30,10 +30,12 @@ public class BankingServiceTest {
 		int targetId = 2;
 		double sourceBalance = 10_000_000.00;
 		double targetBalance = 5.00;
+		String sourceOwner = "John Doe";
+		String targetOwner = "Jane Doe";
 		double amount = 1_000_000.00;
 
-		Account fromAccount = dao.create(sourceId, sourceBalance);
-		Account toAccount = dao.create(targetId, targetBalance);
+		Account fromAccount = dao.create(sourceId, sourceOwner, sourceBalance);
+		Account toAccount = dao.create(targetId, targetOwner, targetBalance);
 
 		int fromAccountId = fromAccount.getId();
 		int toAccountId = toAccount.getId();
@@ -44,6 +46,8 @@ public class BankingServiceTest {
 		// verify
 		Account finalFromAccount = dao.find(fromAccountId);
 		Account finalToAccount = dao.find(toAccountId);
+		Assert.assertEquals(sourceOwner, finalFromAccount.getOwner());
+		Assert.assertEquals(targetOwner, finalToAccount.getOwner());
 		Assert.assertEquals(sourceBalance - amount, finalFromAccount.getBalance(), ERROR_TOLERANCE);
 		Assert.assertEquals(targetBalance + amount, finalToAccount.getBalance(), ERROR_TOLERANCE);
 
