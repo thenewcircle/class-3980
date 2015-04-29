@@ -7,8 +7,13 @@ import example.banking.domain.Account;
 
 public class InMemoryAccountDao implements AccountDao {
 
+	private static InMemoryAccountDao instance = new InMemoryAccountDao();
+
 	private Map<Integer, Account> database = new HashMap<>();
 	private int counter = 1;
+
+	private InMemoryAccountDao() {
+	}
 
 	@Override
 	public synchronized Account create(String owner, double balance) {
@@ -34,6 +39,10 @@ public class InMemoryAccountDao implements AccountDao {
 		if (found == null)
 			throw new RuntimeException("Not found!");
 		database.put(account.getId(), account);
+	}
+
+	public static AccountDao getInstance() {
+		return instance;
 	}
 
 }

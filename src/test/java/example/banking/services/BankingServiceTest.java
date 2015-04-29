@@ -21,7 +21,7 @@ public class BankingServiceTest {
 	public void testTransfer() {
 
 		// assemble
-		AccountDao dao = new InMemoryAccountDao();
+		AccountDao dao = InMemoryAccountDao.getInstance();
 		BankingService teller = new SimpleBankingService();
 
 		// test fixtures
@@ -38,7 +38,7 @@ public class BankingServiceTest {
 		int toAccountId = toAccount.getId();
 
 		// act
-		teller.transfer(dao, fromAccountId, toAccountId, amount);
+		teller.transfer(fromAccountId, toAccountId, amount);
 
 		// verify
 		Account finalFromAccount = dao.find(fromAccountId);
@@ -74,7 +74,7 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountInDatabaseId() {
-		AccountDao dao = new InMemoryAccountDao();
+		AccountDao dao = InMemoryAccountDao.getInstance();
 		Account account = dao.create("Jill Doe", 1_000.0);
 		Assert.assertNotNull(account.getId());
 	}
