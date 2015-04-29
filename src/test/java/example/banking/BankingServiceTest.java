@@ -10,4 +10,10 @@ public class BankingServiceTest {
 		Assert.assertEquals(1, 1);
 	}
 
+	@Test
+	public void testTransfer() {
+		BankingService teller = new SimpleBankingService();
+		teller.transfer(1, 2, 1_000_000.00);
+	}
+
 }
