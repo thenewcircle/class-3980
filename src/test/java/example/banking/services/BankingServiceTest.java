@@ -77,6 +77,7 @@ public class BankingServiceTest {
 			Assert.assertNotNull(e);
 			String expected = "Account #" + fromAccountId + " was not found";
 			Assert.assertEquals(expected, e.getMessage());
+			Assert.assertEquals(fromAccountId, e.getAccountId());
 		}
 	}
 
@@ -97,6 +98,7 @@ public class BankingServiceTest {
 			Assert.assertNotNull(e);
 			String expected = "Account #" + toAccountId + " was not found";
 			Assert.assertEquals(expected, e.getMessage());
+			Assert.assertEquals(toAccountId, e.getAccountId());
 		}
 	}
 
