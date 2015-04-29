@@ -1,6 +1,8 @@
 package example.banking.services;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import example.banking.dao.AccountDao;
@@ -46,11 +48,23 @@ public class BankingServiceTest {
 		Account finalToAccount = dao.find(toAccountId);
 		Assert.assertEquals(sourceOwner, finalFromAccount.getOwner());
 		Assert.assertEquals(targetOwner, finalToAccount.getOwner());
-		Assert.assertEquals(sourceBalance - amount, finalFromAccount.getBalance(), ERROR_TOLERANCE);
-		Assert.assertEquals(targetBalance + amount, finalToAccount.getBalance(), ERROR_TOLERANCE);
+		Assert.assertEquals(sourceBalance - amount,
+				finalFromAccount.getBalance(), ERROR_TOLERANCE);
+		Assert.assertEquals(targetBalance + amount,
+				finalToAccount.getBalance(), ERROR_TOLERANCE);
 
 		// cleanup
 
+	}
+
+	@Test
+	public void testAccountNotFoundInGet() {
+		Assume.assumeNoException(new UnsupportedOperationException("Not implemented."));
+	}
+
+	@Test
+	public void testTransferWithInsufficientBalance() {
+		Assume.assumeNoException(new UnsupportedOperationException("Not implemented."));
 	}
 
 }
