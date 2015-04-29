@@ -5,7 +5,6 @@ import org.junit.Assume;
 import org.junit.Test;
 
 import example.banking.dao.AccountDao;
-import example.banking.dao.InMemoryAccountDao;
 import example.banking.domain.Account;
 
 public class BankingServiceTest {
@@ -21,8 +20,8 @@ public class BankingServiceTest {
 	public void testTransfer() {
 
 		// assemble
-		AccountDao dao = InMemoryAccountDao.getInstance();
-		BankingService teller = new SimpleBankingService();
+		AccountDao dao = ConfigurationService.getAccountDao();
+		BankingService teller = ConfigurationService.getBankingService();
 
 		// test fixtures
 		double sourceBalance = 10_000_000.00;
@@ -74,7 +73,7 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountInDatabaseId() {
-		AccountDao dao = InMemoryAccountDao.getInstance();
+		AccountDao dao = ConfigurationService.getAccountDao();
 		Account account = dao.create("Jill Doe", 1_000.0);
 		Assert.assertNotNull(account.getId());
 	}
