@@ -57,6 +57,30 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountNotFoundInGet() {
+
+		// assemble
+
+		// test fixture
+		int nonExistingAccountId = -1;
+
+		// act
+		Account account = dao.find(nonExistingAccountId);
+
+		// verify
+		Assert.assertNull(account);
+
+		// cleanup
+
+	}
+
+	@Test
+	public void testTransferFromNonExistingAccount() {
+		Assume.assumeNoException(new UnsupportedOperationException(
+				"Not implemented."));
+	}
+
+	@Test
+	public void testTransferToNonExistingAccount() {
 		Assume.assumeNoException(new UnsupportedOperationException(
 				"Not implemented."));
 	}
