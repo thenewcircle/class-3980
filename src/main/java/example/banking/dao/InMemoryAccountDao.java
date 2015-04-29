@@ -22,6 +22,7 @@ public class InMemoryAccountDao implements AccountDao {
 	@Override
 	public Account find(int id) {
 		Account account = database.get(Integer.valueOf(id));
+		if ( account == null ) return null;
 		return new Account(account.getId(), account.getOwner(), account.getBalance());
 	}
 
