@@ -1,4 +1,8 @@
-package example.banking;
+package example.banking.services;
+
+import example.banking.dao.AccountDao;
+import example.banking.dao.InMemoryAccountDao;
+import example.banking.domain.Account;
 
 public class SimpleBankingService implements BankingService {
 

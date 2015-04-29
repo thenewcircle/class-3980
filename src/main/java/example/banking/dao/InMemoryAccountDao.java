@@ -1,7 +1,9 @@
-package example.banking;
+package example.banking.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import example.banking.domain.Account;
 
 public class InMemoryAccountDao implements AccountDao {
 

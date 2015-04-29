@@ -1,4 +1,6 @@
-package example.banking;
+package example.banking.dao;
+
+import example.banking.domain.Account;
 
 public interface AccountDao {
 	Account create(int id, double balance);

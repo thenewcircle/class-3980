@@ -1,7 +1,13 @@
-package example.banking;
+package example.banking.services;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import example.banking.dao.AccountDao;
+import example.banking.dao.InMemoryAccountDao;
+import example.banking.domain.Account;
+import example.banking.services.BankingService;
+import example.banking.services.SimpleBankingService;
 
 public class BankingServiceTest {
 
