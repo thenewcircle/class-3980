@@ -2,5 +2,5 @@ package example.banking.services;
 
 
 public interface BankingService {
-	void transfer(int fromAccountId, int toAccountId, double amount);
+	void transfer(int fromAccountId, int toAccountId, double amount) throws AccountNotFoundException;
 }

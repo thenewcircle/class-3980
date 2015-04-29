@@ -18,9 +18,14 @@ public class SimpleBankingService implements BankingService {
 	}
 
 	@Override
-	public void transfer(int fromAccountId, int toAccountId, double amount) {
+	public void transfer(int fromAccountId, int toAccountId, double amount)
+			throws AccountNotFoundException {
 
 		Account fromAccount = dao.find(fromAccountId);
+		if (fromAccount == null)
+			throw new AccountNotFoundException(String.format(
+					"Account #%d was not found", fromAccountId));
+
 		Account toAccount = dao.find(toAccountId);
 
 		fromAccount.withdraw(amount);

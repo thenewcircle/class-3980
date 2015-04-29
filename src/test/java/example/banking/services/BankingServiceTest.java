@@ -21,7 +21,7 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransfer() {
+	public void testTransfer() throws AccountNotFoundException {
 		// assemble
 
 		// test fixtures
