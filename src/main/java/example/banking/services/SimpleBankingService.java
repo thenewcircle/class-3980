@@ -16,6 +16,9 @@ public class SimpleBankingService implements BankingService {
 
 		fromAccount.withdraw(amount);
 		toAccount.deposit(amount);
+		
+		dao.update(fromAccount);
+		dao.update(toAccount);
 
 	}
 
