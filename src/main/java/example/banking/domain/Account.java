@@ -27,5 +27,13 @@ public class Account {
 	public String getOwner() {
 		return owner;
 	}
+	
+	public void withdraw(double amount) {
+		this.balance -= amount;
+	}
+
+	public void deposit(double amount) {
+		this.balance += amount;
+	}
 
 }
