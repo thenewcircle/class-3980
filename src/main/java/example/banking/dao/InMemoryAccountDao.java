@@ -7,7 +7,7 @@ import example.banking.domain.Account;
 
 public class InMemoryAccountDao implements AccountDao {
 
-	private static Map<Integer, Account> database = new HashMap<>();
+	private Map<Integer, Account> database = new HashMap<>();
 	private int counter = 1;
 
 	@Override

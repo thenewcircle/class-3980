@@ -38,7 +38,7 @@ public class BankingServiceTest {
 		int toAccountId = toAccount.getId();
 
 		// act
-		teller.transfer(fromAccountId, toAccountId, amount);
+		teller.transfer(dao, fromAccountId, toAccountId, amount);
 
 		// verify
 		Account finalFromAccount = dao.find(fromAccountId);
