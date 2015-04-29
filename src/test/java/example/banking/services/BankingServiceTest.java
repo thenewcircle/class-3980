@@ -30,8 +30,8 @@ public class BankingServiceTest {
 		int targetId = 2;
 		double sourceBalance = 10_000_000.00;
 		double targetBalance = 5.00;
-		String sourceOwner = "John Doe";
-		String targetOwner = "Jane Doe";
+		String sourceOwner = "Jane Doe";
+		String targetOwner = "John Doe";
 		double amount = 1_000_000.00;
 
 		Account fromAccount = dao.create(sourceId, sourceOwner, sourceBalance);

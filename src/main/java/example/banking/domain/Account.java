@@ -4,9 +4,11 @@ public class Account {
 
 	private Integer id;
 	private double balance;
+	private String owner;
 
-	public Account(Integer id, double balance) {
+	public Account(Integer id, String owner, double balance) {
 		this.id = id;
+		this.owner = owner;
 		this.balance = balance;
 	}
 
@@ -20,6 +22,10 @@ public class Account {
 
 	public void setBalance(double balance) {
 		this.balance = balance;
+	}
+
+	public String getOwner() {
+		return owner;
 	}
 
 }
