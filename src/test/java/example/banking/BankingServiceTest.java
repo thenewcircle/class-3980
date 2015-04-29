@@ -5,6 +5,8 @@ import org.junit.Test;
 
 public class BankingServiceTest {
 
+	private static final double ERROR_TOLERANCE = 0.00_001;
+
 	@Test
 	public void testHelloWorld() {
 		Assert.assertEquals(1, 1);
@@ -18,11 +20,17 @@ public class BankingServiceTest {
 		BankingService teller = new SimpleBankingService();
 
 		// test fixtures
-		Account fromAccount = dao.create(1, 10_000_000.00);
-		Account toAccount = dao.create(2, 5.00);
+		int sourceId = 1;
+		int targetId = 2;
+		double sourceBalance = 10_000_000.00;
+		double targetBalance = 5.00;
+		double amount = 1_000_000.00;
+
+		Account fromAccount = dao.create(sourceId, sourceBalance);
+		Account toAccount = dao.create(targetId, targetBalance);
+
 		int fromAccountId = fromAccount.getId();
 		int toAccountId = toAccount.getId();
-		double amount = 1_000_000.00;
 
 		// act
 		teller.transfer(fromAccountId, toAccountId, amount);
@@ -30,8 +38,8 @@ public class BankingServiceTest {
 		// verify
 		Account finalFromAccount = dao.find(fromAccountId);
 		Account finalToAccount = dao.find(toAccountId);
-		Assert.assertEquals(10_000_000.0 - 1_000_000.0, finalFromAccount.getBalance());
-		Assert.assertEquals(5.0 + 1_000_000.0, finalToAccount.getBalance());
+		Assert.assertEquals(sourceBalance - amount, finalFromAccount.getBalance(), ERROR_TOLERANCE);
+		Assert.assertEquals(targetBalance + amount, finalToAccount.getBalance(), ERROR_TOLERANCE);
 
 		// cleanup
 
