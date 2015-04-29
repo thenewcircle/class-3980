@@ -1,17 +1,22 @@
 package example.banking;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InMemoryAccountDao implements AccountDao {
 
+	private static Map<Integer,Account> database = new HashMap<>();
+	
 	@Override
-	public Account create(int id, double balance) {
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized Account create(int id, double balance) {
+		Account account = new Account(id,balance);
+		database.put(Integer.valueOf(id), account);
+		return account;
 	}
 
 	@Override
 	public Account find(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return database.get(Integer.valueOf(id));
 	}
 
 }
