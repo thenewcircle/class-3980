@@ -27,6 +27,9 @@ public class SimpleBankingService implements BankingService {
 					"Account #%d was not found", fromAccountId));
 
 		Account toAccount = dao.find(toAccountId);
+		if (toAccount == null)
+			throw new AccountNotFoundException(String.format(
+					"Account #%d was not found", toAccountId));
 
 		fromAccount.withdraw(amount);
 		toAccount.deposit(amount);
