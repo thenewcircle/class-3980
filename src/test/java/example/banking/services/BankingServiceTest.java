@@ -22,7 +22,6 @@ public class BankingServiceTest {
 
 	@Test
 	public void testTransfer() {
-
 		// assemble
 
 		// test fixtures
@@ -52,31 +51,33 @@ public class BankingServiceTest {
 				finalToAccount.getBalance(), ERROR_TOLERANCE);
 
 		// cleanup
-
 	}
 
 	@Test
 	public void testAccountNotFoundInGet() {
-
-		// assemble
-
-		// test fixture
 		int nonExistingAccountId = -1;
-
-		// act
 		Account account = dao.find(nonExistingAccountId);
-
-		// verify
 		Assert.assertNull(account);
-
-		// cleanup
-
 	}
 
 	@Test
 	public void testTransferFromNonExistingAccount() {
-		Assume.assumeNoException(new UnsupportedOperationException(
-				"Not implemented."));
+		int fromAccountId = -1;
+		double amount = 1_000_000.00;
+		double targetBalance = 5.00;
+		String targetOwner = "John Doe";
+
+		Account toAccount = dao.create(targetOwner, targetBalance);
+		int toAccountId = toAccount.getId();
+
+		try {
+			teller.transfer(fromAccountId, toAccountId, amount);
+			Assert.fail("Did not catch AccountNotFoundException.");
+		} catch (AccountNotFoundException e) {
+			Assert.assertNotNull(e);
+			String expected = "Account #" + fromAccountId + " was not found";
+			Assert.assertEquals(expected, e.getMessage());
+		}
 	}
 
 	@Test
