@@ -82,8 +82,22 @@ public class BankingServiceTest {
 
 	@Test
 	public void testTransferToNonExistingAccount() {
-		Assume.assumeNoException(new UnsupportedOperationException(
-				"Not implemented."));
+		double amount = 1_000_000.00;
+		double sourceBalance = 5.00;
+		String sourceOwner = "John Doe";
+		int toAccountId = -1;
+
+		Account fromAccount = dao.create(sourceOwner, sourceBalance);
+		int fromAccountId = fromAccount.getId();
+
+		try {
+			teller.transfer(fromAccountId, toAccountId, amount);
+			Assert.fail("Did not catch AccountNotFoundException.");
+		} catch (AccountNotFoundException e) {
+			Assert.assertNotNull(e);
+			String expected = "Account #" + toAccountId + " was not found";
+			Assert.assertEquals(expected, e.getMessage());
+		}
 	}
 
 	@Test
