@@ -26,16 +26,14 @@ public class BankingServiceTest {
 		BankingService teller = new SimpleBankingService();
 
 		// test fixtures
-		int sourceId = 1;
-		int targetId = 2;
 		double sourceBalance = 10_000_000.00;
 		double targetBalance = 5.00;
 		String sourceOwner = "Jane Doe";
 		String targetOwner = "John Doe";
 		double amount = 1_000_000.00;
 
-		Account fromAccount = dao.create(sourceId, sourceOwner, sourceBalance);
-		Account toAccount = dao.create(targetId, targetOwner, targetBalance);
+		Account fromAccount = dao.create(sourceOwner, sourceBalance);
+		Account toAccount = dao.create(targetOwner, targetBalance);
 
 		int fromAccountId = fromAccount.getId();
 		int toAccountId = toAccount.getId();
