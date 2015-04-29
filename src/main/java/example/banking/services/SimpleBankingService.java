@@ -23,13 +23,11 @@ public class SimpleBankingService implements BankingService {
 
 		Account fromAccount = dao.find(fromAccountId);
 		if (fromAccount == null)
-			throw new AccountNotFoundException(String.format(
-					"Account #%d was not found", fromAccountId));
+			throw new AccountNotFoundException(fromAccountId);
 
 		Account toAccount = dao.find(toAccountId);
 		if (toAccount == null)
-			throw new AccountNotFoundException(String.format(
-					"Account #%d was not found", toAccountId));
+			throw new AccountNotFoundException(toAccountId);
 
 		fromAccount.withdraw(amount);
 		toAccount.deposit(amount);
