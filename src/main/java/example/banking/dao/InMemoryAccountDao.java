@@ -15,12 +15,13 @@ public class InMemoryAccountDao implements AccountDao {
 		int id = counter++;
 		Account account = new Account(id,owner,balance);
 		database.put(Integer.valueOf(id), account);
-		return account;
+		return new Account(account.getId(),account.getOwner(),account.getBalance());
 	}
 
 	@Override
 	public Account find(int id) {
-		return database.get(Integer.valueOf(id));
+		Account account = database.get(Integer.valueOf(id));
+		return new Account(account.getId(),account.getOwner(),account.getBalance());
 	}
 
 
