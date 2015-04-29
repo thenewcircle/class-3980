@@ -12,8 +12,15 @@ public class BankingServiceTest {
 
 	@Test
 	public void testTransfer() {
+
 		BankingService teller = new SimpleBankingService();
-		teller.transfer(1, 2, 1_000_000.00);
+
+		int fromAccountId = 1;
+		int toAccountId = 2;
+		double amount = 1_000_000.00;
+
+		teller.transfer(fromAccountId, toAccountId, amount);
+
 	}
 
 }
