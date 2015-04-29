@@ -56,12 +56,27 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountNotFoundInGet() {
-		Assume.assumeNoException(new UnsupportedOperationException("Not implemented."));
+		Assume.assumeNoException(new UnsupportedOperationException(
+				"Not implemented."));
 	}
 
 	@Test
 	public void testTransferWithInsufficientBalance() {
-		Assume.assumeNoException(new UnsupportedOperationException("Not implemented."));
+		Assume.assumeNoException(new UnsupportedOperationException(
+				"Not implemented."));
+	}
+
+	@Test
+	public void testAccountNotInDatabaseId() {
+		Account account = new Account(null, "Jack Doe", 1_000.0);
+		Assert.assertNull(account.getId());
+	}
+
+	@Test
+	public void testAccountInDatabaseId() {
+		AccountDao dao = new InMemoryAccountDao();
+		Account account = dao.create("Jill Doe", 1_000.0);
+		Assert.assertNotNull(account.getId());
 	}
 
 }
