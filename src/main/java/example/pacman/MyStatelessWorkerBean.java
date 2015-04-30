@@ -8,10 +8,11 @@ import javax.ejb.Stateless;
 public class MyStatelessWorkerBean {
 
 	public void doWork(RequestMessage request) {
-		MyValidator validator = new MyValidator();
+		ConfigurationService configuration = ConfigurationService.getInstance();
+		MyValidator validator = configuration.getValidator();
 		List<ValidationError> errors = validator.validate(request);
 		request.setErrors(errors);
-		DistributionEngine de = new DistributionEngine();
+		DistributionEngine de = configuration.getDistributionEngine();
 		de.buildMessages(request);
 	}
 
