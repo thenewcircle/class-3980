@@ -1,7 +1,6 @@
 package example.banking.services;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Test;
 
 import example.banking.dao.AccountDao;
@@ -110,9 +109,47 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransferWithInsufficientBalance() {
-		Assume.assumeNoException(new UnsupportedOperationException(
-				"Not implemented."));
+	public void testTransferWithInsufficientBalance()
+			throws AccountNotFoundException {
+
+		// assemble
+
+		// test fixture (test data)
+		double sourceBalance = 10.00;
+		double targetBalance = 5.00;
+		String sourceOwner = "Jane Doe";
+		String targetOwner = "John Doe";
+		double amount = 1_000_000.00;
+
+		Account fromAccount = dao.create(sourceOwner, sourceBalance);
+		Account toAccount = dao.create(targetOwner, targetBalance);
+
+		int fromAccountId = fromAccount.getId();
+		int toAccountId = toAccount.getId();
+
+		// act
+		try {
+			teller.transfer(fromAccountId, toAccountId, amount);
+			Assert.fail("Did not throw InsufficientBalanceException.");
+		} catch (InsufficientBalanceException e) {
+			Assert.assertEquals(fromAccountId, e.getAccountId());
+			Assert.assertEquals(sourceBalance, e.getBalance(), ERROR_TOLERANCE);
+			Assert.assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
+			String expected = String.format("Unable to withdraw %d from %s",
+					amount, fromAccount);
+			Assert.assertEquals(expected, e.getMessage());
+		}
+
+		// verify
+		Account finalFrom = dao.find(fromAccountId);
+		Account finalTo = dao.find(toAccountId);
+		Assert.assertEquals(sourceBalance, finalFrom.getBalance(),
+				ERROR_TOLERANCE);
+		Assert.assertEquals(targetBalance, finalTo.getBalance(),
+				ERROR_TOLERANCE);
+
+		// cleanup
+
 	}
 
 	@Test
