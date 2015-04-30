@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import example.banking.dao.AccountDao;
+import example.banking.dao.AccountNotFoundException;
 import example.banking.domain.Account;
 
 public class BankingServiceTestWithMockito {
@@ -56,7 +57,7 @@ public class BankingServiceTestWithMockito {
 
 	@Test
 	public void testTransferFromNonExistingAccount()
-			throws InsufficientBalanceException {
+			throws InsufficientBalanceException, AccountNotFoundException {
 
 		AccountDao dao = Mockito.mock(AccountDao.class);
 		BankingService teller = new SimpleBankingService(dao);
@@ -71,8 +72,7 @@ public class BankingServiceTestWithMockito {
 
 		Account toAccount = new Account(toId, toOwner, toBalance);
 
-		Mockito.when(dao.find(fromId)).thenReturn(null);
-		Mockito.when(dao.find(toId)).thenReturn(toAccount);
+		Mockito.when(dao.find(fromId)).thenThrow(new AccountNotFoundException(fromId));
 
 		try {
 			teller.transfer(fromId, toId, amount);
@@ -90,7 +90,7 @@ public class BankingServiceTestWithMockito {
 
 	@Test
 	public void testTransferToNonExistingAccount()
-			throws InsufficientBalanceException {
+			throws InsufficientBalanceException, AccountNotFoundException {
 
 		AccountDao dao = Mockito.mock(AccountDao.class);
 		BankingService teller = new SimpleBankingService(dao);
@@ -105,7 +105,7 @@ public class BankingServiceTestWithMockito {
 
 		Account fromAccount = new Account(fromId, fromOwner, fromBalance);
 		Mockito.when(dao.find(fromId)).thenReturn(fromAccount);
-		Mockito.when(dao.find(toId)).thenReturn(null);
+		Mockito.when(dao.find(toId)).thenThrow(new AccountNotFoundException(toId));
 
 		try {
 			teller.transfer(fromId, toId, amount);

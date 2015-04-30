@@ -24,21 +24,20 @@ public class InMemoryAccountDao implements AccountDao {
 	}
 
 	@Override
-	public Account find(int id) {
+	public Account find(int id) throws AccountNotFoundException {
 		Account account = database.get(Integer.valueOf(id));
 		if (account == null)
-			return null;
+			throw new AccountNotFoundException(id);
 		return new Account(account.getId(), account.getOwner(),
 				account.getBalance());
 	}
 
 	@Override
-	public void update(Account account) {
+	public void update(Account account) throws AccountNotFoundException {
 		if (account.getId() == null)
-			throw new RuntimeException("Not found.");
-		Account found = database.get(account.getId());
-		if (found == null)
-			throw new RuntimeException("Not found!");
+			throw new IllegalArgumentException("Account id cannot be null");
+		if (!database.containsKey(account.getId()))
+			throw new AccountNotFoundException(account.getId());
 		database.put(account.getId(), account);
 	}
 

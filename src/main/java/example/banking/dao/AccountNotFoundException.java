@@ -1,4 +1,4 @@
-package example.banking.services;
+package example.banking.dao;
 
 public class AccountNotFoundException extends Exception {
 

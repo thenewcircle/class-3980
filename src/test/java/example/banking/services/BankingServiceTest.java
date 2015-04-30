@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import example.banking.dao.AccountDao;
+import example.banking.dao.AccountNotFoundException;
 import example.banking.dao.InMemoryAccountDao;
 import example.banking.domain.Account;
 
@@ -57,16 +58,30 @@ public class BankingServiceTest {
 	public void testAccountNotFoundInGet() {
 		AccountDao dao = new InMemoryAccountDao();
 		int nonExistingAccountId = -1;
-		Account account = dao.find(nonExistingAccountId);
-		Assert.assertNull(account);
+		try {
+			Account account = dao.find(nonExistingAccountId);
+			Assert.fail("Did not throw AccountNotFoundException");
+		} catch (AccountNotFoundException e) {
+			Assert.assertNotNull(e);
+			Assert.assertEquals(nonExistingAccountId, e.getAccountId());
+			String expected = String.format("Account #%s was not found", nonExistingAccountId);
+			Assert.assertEquals(expected,e.getMessage());
+		}
 	}
 
 	@Test
 	public void testAccountNotFoundStartingWithDefaultPrimaryKey() {
 		AccountDao dao = new InMemoryAccountDao();
 		int nonExistingAccountId = 1;
-		Account account = dao.find(nonExistingAccountId);
-		Assert.assertNull(account);
+		try {
+			Account account = dao.find(nonExistingAccountId);
+			Assert.fail("Did not throw AccountNotFoundException");
+		} catch (AccountNotFoundException e) {
+			Assert.assertNotNull(e);
+			Assert.assertEquals(nonExistingAccountId, e.getAccountId());
+			String expected = String.format("Account #%s was not found", nonExistingAccountId);
+			Assert.assertEquals(expected,e.getMessage());
+		}
 	}
 
 	@Test
