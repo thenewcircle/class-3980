@@ -29,9 +29,10 @@ public class Account {
 	public String getOwner() {
 		return owner;
 	}
-	
+
 	public void withdraw(double amount) throws InsufficientBalanceException {
-		if ( balance < amount) throw new InsufficientBalanceException(id,balance,amount);
+		if (balance < amount)
+			throw new InsufficientBalanceException(id, balance, amount);
 		this.balance -= amount;
 	}
 

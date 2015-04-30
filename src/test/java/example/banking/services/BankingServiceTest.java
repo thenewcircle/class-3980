@@ -20,7 +20,8 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransfer() throws AccountNotFoundException, InsufficientBalanceException {
+	public void testTransfer() throws AccountNotFoundException,
+			InsufficientBalanceException {
 		// assemble
 
 		// test fixtures
@@ -67,7 +68,8 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransferFromNonExistingAccount() throws InsufficientBalanceException {
+	public void testTransferFromNonExistingAccount()
+			throws InsufficientBalanceException {
 		int fromAccountId = -1;
 		double amount = 1_000_000.00;
 		double targetBalance = 5.00;
@@ -88,7 +90,8 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransferToNonExistingAccount() throws InsufficientBalanceException {
+	public void testTransferToNonExistingAccount()
+			throws InsufficientBalanceException {
 		double amount = 1_000_000.00;
 		double sourceBalance = 5.00;
 		String sourceOwner = "John Doe";
