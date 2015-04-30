@@ -10,6 +10,10 @@ public class InMemoryAccountDao implements AccountDao {
 	private Map<Integer, Account> database = new HashMap<>();
 	private int counter = 1;
 
+	public InMemoryAccountDao() {
+		super();
+	}
+	
 	@Override
 	public synchronized Account create(String owner, double balance) {
 		int id = counter++;

@@ -61,6 +61,13 @@ public class BankingServiceTest {
 	}
 
 	@Test
+	public void testAccountNotFoundStartingWithDefaultPrimaryKey() {
+		int nonExistingAccountId = 1;
+		Account account = dao.find(nonExistingAccountId);
+		Assert.assertNull(account);
+	}
+
+	@Test
 	public void testTransferFromNonExistingAccount() {
 		int fromAccountId = -1;
 		double amount = 1_000_000.00;
