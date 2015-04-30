@@ -17,7 +17,7 @@ import example.banking.dao.AccountNotFoundException;
 import example.banking.domain.Account;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:BankingSpringConfiguration.xml")
+@ContextConfiguration(classes=BankingSpringConfiguration.class)
 public class SpringBankingServiceTest {
 
 	private static final double ERROR_TOLERANCE = 0.00_001;
