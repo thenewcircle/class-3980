@@ -8,7 +8,7 @@ import example.banking.dao.AccountDao;
 import example.banking.dao.AccountNotFoundException;
 import example.banking.domain.Account;
 
-public class BankingServiceTestWithMockito {
+public class MockitoBankingServiceTest {
 
 	private static final double ERROR_TOLERANCE = 0.00_001;
 
