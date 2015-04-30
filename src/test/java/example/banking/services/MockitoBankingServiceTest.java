@@ -1,8 +1,13 @@
 package example.banking.services;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import example.banking.dao.AccountDao;
 import example.banking.dao.AccountNotFoundException;
@@ -16,7 +21,7 @@ public class MockitoBankingServiceTest {
 	public void testTransfer() throws AccountNotFoundException,
 			InsufficientBalanceException {
 
-		AccountDao dao = Mockito.mock(AccountDao.class);
+		AccountDao dao = mock(AccountDao.class);
 		BankingService teller = new SimpleBankingService(dao);
 
 		int fromId = 1;
@@ -32,24 +37,24 @@ public class MockitoBankingServiceTest {
 		Account fromAccount = new Account(fromId, fromOwner, fromBalance);
 		Account toAccount = new Account(toId, toOwner, toBalance);
 
-		Mockito.when(dao.find(fromId)).thenReturn(fromAccount);
-		Mockito.when(dao.find(toId)).thenReturn(toAccount);
+		when(dao.find(fromId)).thenReturn(fromAccount);
+		when(dao.find(toId)).thenReturn(toAccount);
 
 		teller.transfer(fromId, toId, amount);
 
-		Mockito.verify(dao).find(fromId);
-		Mockito.verify(dao).find(toId);
+		verify(dao).find(fromId);
+		verify(dao).find(toId);
 
-		Mockito.verify(dao).update(fromAccount);
-		Mockito.verify(dao).update(toAccount);
+		verify(dao).update(fromAccount);
+		verify(dao).update(toAccount);
 
 		Account finalFromAccount = dao.find(fromId);
 		Account finalToAccount = dao.find(toId);
-		Assert.assertEquals(fromOwner, finalFromAccount.getOwner());
-		Assert.assertEquals(toOwner, finalToAccount.getOwner());
-		Assert.assertEquals(fromBalance - amount,
-				finalFromAccount.getBalance(), ERROR_TOLERANCE);
-		Assert.assertEquals(toBalance + amount, finalToAccount.getBalance(),
+		assertEquals(fromOwner, finalFromAccount.getOwner());
+		assertEquals(toOwner, finalToAccount.getOwner());
+		assertEquals(fromBalance - amount, finalFromAccount.getBalance(),
+				ERROR_TOLERANCE);
+		assertEquals(toBalance + amount, finalToAccount.getBalance(),
 				ERROR_TOLERANCE);
 
 		// cleanup
@@ -59,32 +64,27 @@ public class MockitoBankingServiceTest {
 	public void testTransferFromNonExistingAccount()
 			throws InsufficientBalanceException, AccountNotFoundException {
 
-		AccountDao dao = Mockito.mock(AccountDao.class);
+		AccountDao dao = mock(AccountDao.class);
 		BankingService teller = new SimpleBankingService(dao);
 
 		int fromId = -1;
-
-		double toBalance = 5.00;
-		String toOwner = "John Doe";
 		int toId = 1;
 
 		double amount = 1_000_000.00;
 
-		Account toAccount = new Account(toId, toOwner, toBalance);
-
-		Mockito.when(dao.find(fromId)).thenThrow(new AccountNotFoundException(fromId));
+		when(dao.find(fromId)).thenThrow(new AccountNotFoundException(fromId));
 
 		try {
 			teller.transfer(fromId, toId, amount);
-			Assert.fail("Did not catch AccountNotFoundException.");
+			fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
+			assertNotNull(e);
 			String expected = "Account #" + fromId + " was not found";
-			Assert.assertEquals(expected, e.getMessage());
-			Assert.assertEquals(fromId, e.getAccountId());
+			assertEquals(expected, e.getMessage());
+			assertEquals(fromId, e.getAccountId());
 		}
 
-		Mockito.verify(dao).find(fromId);
+		verify(dao).find(fromId);
 
 	}
 
@@ -92,7 +92,7 @@ public class MockitoBankingServiceTest {
 	public void testTransferToNonExistingAccount()
 			throws InsufficientBalanceException, AccountNotFoundException {
 
-		AccountDao dao = Mockito.mock(AccountDao.class);
+		AccountDao dao = mock(AccountDao.class);
 		BankingService teller = new SimpleBankingService(dao);
 
 		double fromBalance = 5.00;
@@ -104,21 +104,22 @@ public class MockitoBankingServiceTest {
 		double amount = 1_000_000.00;
 
 		Account fromAccount = new Account(fromId, fromOwner, fromBalance);
-		Mockito.when(dao.find(fromId)).thenReturn(fromAccount);
-		Mockito.when(dao.find(toId)).thenThrow(new AccountNotFoundException(toId));
+		when(dao.find(fromId)).thenReturn(fromAccount);
+		when(dao.find(toId)).thenThrow(
+				new AccountNotFoundException(toId));
 
 		try {
 			teller.transfer(fromId, toId, amount);
-			Assert.fail("Did not catch AccountNotFoundException.");
+			fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
+			assertNotNull(e);
 			String expected = "Account #" + toId + " was not found";
-			Assert.assertEquals(expected, e.getMessage());
-			Assert.assertEquals(toId, e.getAccountId());
+			assertEquals(expected, e.getMessage());
+			assertEquals(toId, e.getAccountId());
 		}
 
-		Mockito.verify(dao).find(fromId);
-		Mockito.verify(dao).find(toId);
+		verify(dao).find(fromId);
+		verify(dao).find(toId);
 
 	}
 
@@ -126,7 +127,7 @@ public class MockitoBankingServiceTest {
 	public void testTransferWithInsufficientBalance()
 			throws AccountNotFoundException {
 
-		AccountDao dao = Mockito.mock(AccountDao.class);
+		AccountDao dao = mock(AccountDao.class);
 		BankingService teller = new SimpleBankingService(dao);
 
 		int fromId = 1;
@@ -142,31 +143,30 @@ public class MockitoBankingServiceTest {
 		Account fromAccount = new Account(fromId, fromOwner, fromBalance);
 		Account toAccount = new Account(toId, toOwner, toBalance);
 
-		Mockito.when(dao.find(fromId)).thenReturn(fromAccount);
-		Mockito.when(dao.find(toId)).thenReturn(toAccount);
+		when(dao.find(fromId)).thenReturn(fromAccount);
+		when(dao.find(toId)).thenReturn(toAccount);
 
 		try {
 			teller.transfer(fromId, toId, amount);
-			Assert.fail("Did not throw InsufficientBalanceException.");
+			fail("Did not throw InsufficientBalanceException.");
 		} catch (InsufficientBalanceException e) {
-			Assert.assertEquals(fromId, e.getAccountId());
-			Assert.assertEquals(fromBalance, e.getBalance(), ERROR_TOLERANCE);
-			Assert.assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
+			assertEquals(fromId, e.getAccountId());
+			assertEquals(fromBalance, e.getBalance(), ERROR_TOLERANCE);
+			assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
 			String expected = String.format(
 					"Unable to withdraw %s from Account id=%s, balance=%s",
 					amount, fromId, fromAccount.getBalance());
-			Assert.assertEquals(expected, e.getMessage());
+			assertEquals(expected, e.getMessage());
 		}
 
-
-		Mockito.verify(dao).find(fromId);
-		Mockito.verify(dao).find(toId);
+		verify(dao).find(fromId);
+		verify(dao).find(toId);
 
 		Account finalFromAccount = dao.find(fromId);
 		Account finalToAccount = dao.find(toId);
-		Assert.assertEquals(fromBalance, finalFromAccount.getBalance(),
+		assertEquals(fromBalance, finalFromAccount.getBalance(),
 				ERROR_TOLERANCE);
-		Assert.assertEquals(toBalance, finalToAccount.getBalance(),
+		assertEquals(toBalance, finalToAccount.getBalance(),
 				ERROR_TOLERANCE);
 
 	}

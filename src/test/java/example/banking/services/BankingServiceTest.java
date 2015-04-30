@@ -1,6 +1,10 @@
 package example.banking.services;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import example.banking.dao.AccountDao;
@@ -14,7 +18,7 @@ public class BankingServiceTest {
 
 	@Test
 	public void testHelloWorld() {
-		Assert.assertEquals(1, 1);
+		assertEquals(1, 1);
 	}
 
 	@Test
@@ -44,11 +48,11 @@ public class BankingServiceTest {
 		// verify
 		Account finalFromAccount = dao.find(fromAccountId);
 		Account finalToAccount = dao.find(toAccountId);
-		Assert.assertEquals(sourceOwner, finalFromAccount.getOwner());
-		Assert.assertEquals(targetOwner, finalToAccount.getOwner());
-		Assert.assertEquals(sourceBalance - amount,
+		assertEquals(sourceOwner, finalFromAccount.getOwner());
+		assertEquals(targetOwner, finalToAccount.getOwner());
+		assertEquals(sourceBalance - amount,
 				finalFromAccount.getBalance(), ERROR_TOLERANCE);
-		Assert.assertEquals(targetBalance + amount,
+		assertEquals(targetBalance + amount,
 				finalToAccount.getBalance(), ERROR_TOLERANCE);
 
 		// cleanup
@@ -59,13 +63,13 @@ public class BankingServiceTest {
 		AccountDao dao = new InMemoryAccountDao();
 		int nonExistingAccountId = -1;
 		try {
-			Account account = dao.find(nonExistingAccountId);
-			Assert.fail("Did not throw AccountNotFoundException");
+			dao.find(nonExistingAccountId);
+			fail("Did not throw AccountNotFoundException");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
-			Assert.assertEquals(nonExistingAccountId, e.getAccountId());
+			assertNotNull(e);
+			assertEquals(nonExistingAccountId, e.getAccountId());
 			String expected = String.format("Account #%s was not found", nonExistingAccountId);
-			Assert.assertEquals(expected,e.getMessage());
+			assertEquals(expected,e.getMessage());
 		}
 	}
 
@@ -74,13 +78,13 @@ public class BankingServiceTest {
 		AccountDao dao = new InMemoryAccountDao();
 		int nonExistingAccountId = 1;
 		try {
-			Account account = dao.find(nonExistingAccountId);
-			Assert.fail("Did not throw AccountNotFoundException");
+			dao.find(nonExistingAccountId);
+			fail("Did not throw AccountNotFoundException");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
-			Assert.assertEquals(nonExistingAccountId, e.getAccountId());
+			assertNotNull(e);
+			assertEquals(nonExistingAccountId, e.getAccountId());
 			String expected = String.format("Account #%s was not found", nonExistingAccountId);
-			Assert.assertEquals(expected,e.getMessage());
+			assertEquals(expected,e.getMessage());
 		}
 	}
 
@@ -101,12 +105,12 @@ public class BankingServiceTest {
 
 		try {
 			teller.transfer(fromAccountId, toAccountId, amount);
-			Assert.fail("Did not catch AccountNotFoundException.");
+			fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
+			assertNotNull(e);
 			String expected = "Account #" + fromAccountId + " was not found";
-			Assert.assertEquals(expected, e.getMessage());
-			Assert.assertEquals(fromAccountId, e.getAccountId());
+			assertEquals(expected, e.getMessage());
+			assertEquals(fromAccountId, e.getAccountId());
 		}
 	}
 
@@ -127,12 +131,12 @@ public class BankingServiceTest {
 
 		try {
 			teller.transfer(fromAccountId, toAccountId, amount);
-			Assert.fail("Did not catch AccountNotFoundException.");
+			fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
+			assertNotNull(e);
 			String expected = "Account #" + toAccountId + " was not found";
-			Assert.assertEquals(expected, e.getMessage());
-			Assert.assertEquals(toAccountId, e.getAccountId());
+			assertEquals(expected, e.getMessage());
+			assertEquals(toAccountId, e.getAccountId());
 		}
 	}
 
@@ -160,23 +164,23 @@ public class BankingServiceTest {
 		// act
 		try {
 			teller.transfer(fromAccountId, toAccountId, amount);
-			Assert.fail("Did not throw InsufficientBalanceException.");
+			fail("Did not throw InsufficientBalanceException.");
 		} catch (InsufficientBalanceException e) {
-			Assert.assertEquals(fromAccountId, e.getAccountId());
-			Assert.assertEquals(sourceBalance, e.getBalance(), ERROR_TOLERANCE);
-			Assert.assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
+			assertEquals(fromAccountId, e.getAccountId());
+			assertEquals(sourceBalance, e.getBalance(), ERROR_TOLERANCE);
+			assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
 			String expected = String.format(
 					"Unable to withdraw %s from Account id=%s, balance=%s",
 					amount, fromAccountId, fromAccount.getBalance());
-			Assert.assertEquals(expected, e.getMessage());
+			assertEquals(expected, e.getMessage());
 		}
 
 		// verify
 		Account finalFrom = dao.find(fromAccountId);
 		Account finalTo = dao.find(toAccountId);
-		Assert.assertEquals(sourceBalance, finalFrom.getBalance(),
+		assertEquals(sourceBalance, finalFrom.getBalance(),
 				ERROR_TOLERANCE);
-		Assert.assertEquals(targetBalance, finalTo.getBalance(),
+		assertEquals(targetBalance, finalTo.getBalance(),
 				ERROR_TOLERANCE);
 
 		// cleanup
@@ -186,14 +190,14 @@ public class BankingServiceTest {
 	@Test
 	public void testAccountNotInDatabaseId() {
 		Account account = new Account(null, "Jack Doe", 1_000.0);
-		Assert.assertNull(account.getId());
+		assertNull(account.getId());
 	}
 
 	@Test
 	public void testAccountInDatabaseId() {
 		AccountDao dao = new InMemoryAccountDao();
 		Account account = dao.create("Jill Doe", 1_000.0);
-		Assert.assertNotNull(account.getId());
+		assertNotNull(account.getId());
 	}
 
 }

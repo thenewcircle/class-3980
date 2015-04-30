@@ -1,10 +1,13 @@
 package example.banking.services;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -27,11 +30,9 @@ public class PowerMockBankingServiceTest {
 		AccountDao dummyDao = new InMemoryAccountDao();
 		BankingService dummyTeller = new SimpleBankingService(dummyDao);
 
-		PowerMockito.mockStatic(ConfigurationService.class);
-		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
-
-		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
-				dummyTeller);
+		mockStatic(ConfigurationService.class);
+		when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		when(ConfigurationService.getBankingService()).thenReturn(dummyTeller);
 
 		// now powermock will substitute static calls with our objects
 		AccountDao dao = ConfigurationService.getAccountDao();
@@ -56,12 +57,12 @@ public class PowerMockBankingServiceTest {
 		// verify
 		Account finalFromAccount = dao.find(fromAccountId);
 		Account finalToAccount = dao.find(toAccountId);
-		Assert.assertEquals(sourceOwner, finalFromAccount.getOwner());
-		Assert.assertEquals(targetOwner, finalToAccount.getOwner());
-		Assert.assertEquals(sourceBalance - amount,
-				finalFromAccount.getBalance(), ERROR_TOLERANCE);
-		Assert.assertEquals(targetBalance + amount,
-				finalToAccount.getBalance(), ERROR_TOLERANCE);
+		assertEquals(sourceOwner, finalFromAccount.getOwner());
+		assertEquals(targetOwner, finalToAccount.getOwner());
+		assertEquals(sourceBalance - amount, finalFromAccount.getBalance(),
+				ERROR_TOLERANCE);
+		assertEquals(targetBalance + amount, finalToAccount.getBalance(),
+				ERROR_TOLERANCE);
 
 		// cleanup
 	}
@@ -74,10 +75,9 @@ public class PowerMockBankingServiceTest {
 		AccountDao dummyDao = new InMemoryAccountDao();
 		BankingService dummyTeller = new SimpleBankingService(dummyDao);
 
-		PowerMockito.mockStatic(ConfigurationService.class);
-		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
-		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
-				dummyTeller);
+		mockStatic(ConfigurationService.class);
+		when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		when(ConfigurationService.getBankingService()).thenReturn(dummyTeller);
 
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
@@ -92,12 +92,12 @@ public class PowerMockBankingServiceTest {
 
 		try {
 			teller.transfer(fromAccountId, toAccountId, amount);
-			Assert.fail("Did not catch AccountNotFoundException.");
+			fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
+			assertNotNull(e);
 			String expected = "Account #" + fromAccountId + " was not found";
-			Assert.assertEquals(expected, e.getMessage());
-			Assert.assertEquals(fromAccountId, e.getAccountId());
+			assertEquals(expected, e.getMessage());
+			assertEquals(fromAccountId, e.getAccountId());
 		}
 	}
 
@@ -109,10 +109,9 @@ public class PowerMockBankingServiceTest {
 		AccountDao dummyDao = new InMemoryAccountDao();
 		BankingService dummyTeller = new SimpleBankingService(dummyDao);
 
-		PowerMockito.mockStatic(ConfigurationService.class);
-		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
-		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
-				dummyTeller);
+		mockStatic(ConfigurationService.class);
+		when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		when(ConfigurationService.getBankingService()).thenReturn(dummyTeller);
 
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
@@ -127,12 +126,12 @@ public class PowerMockBankingServiceTest {
 
 		try {
 			teller.transfer(fromAccountId, toAccountId, amount);
-			Assert.fail("Did not catch AccountNotFoundException.");
+			fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
-			Assert.assertNotNull(e);
+			assertNotNull(e);
 			String expected = "Account #" + toAccountId + " was not found";
-			Assert.assertEquals(expected, e.getMessage());
-			Assert.assertEquals(toAccountId, e.getAccountId());
+			assertEquals(expected, e.getMessage());
+			assertEquals(toAccountId, e.getAccountId());
 		}
 	}
 
@@ -145,10 +144,9 @@ public class PowerMockBankingServiceTest {
 		AccountDao dummyDao = new InMemoryAccountDao();
 		BankingService dummyTeller = new SimpleBankingService(dummyDao);
 
-		PowerMockito.mockStatic(ConfigurationService.class);
-		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
-		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
-				dummyTeller);
+		mockStatic(ConfigurationService.class);
+		when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		when(ConfigurationService.getBankingService()).thenReturn(dummyTeller);
 
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
@@ -169,24 +167,22 @@ public class PowerMockBankingServiceTest {
 		// act
 		try {
 			teller.transfer(fromAccountId, toAccountId, amount);
-			Assert.fail("Did not throw InsufficientBalanceException.");
+			fail("Did not throw InsufficientBalanceException.");
 		} catch (InsufficientBalanceException e) {
-			Assert.assertEquals(fromAccountId, e.getAccountId());
-			Assert.assertEquals(sourceBalance, e.getBalance(), ERROR_TOLERANCE);
-			Assert.assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
+			assertEquals(fromAccountId, e.getAccountId());
+			assertEquals(sourceBalance, e.getBalance(), ERROR_TOLERANCE);
+			assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
 			String expected = String.format(
 					"Unable to withdraw %s from Account id=%s, balance=%s",
 					amount, fromAccountId, fromAccount.getBalance());
-			Assert.assertEquals(expected, e.getMessage());
+			assertEquals(expected, e.getMessage());
 		}
 
 		// verify
 		Account finalFrom = dao.find(fromAccountId);
 		Account finalTo = dao.find(toAccountId);
-		Assert.assertEquals(sourceBalance, finalFrom.getBalance(),
-				ERROR_TOLERANCE);
-		Assert.assertEquals(targetBalance, finalTo.getBalance(),
-				ERROR_TOLERANCE);
+		assertEquals(sourceBalance, finalFrom.getBalance(), ERROR_TOLERANCE);
+		assertEquals(targetBalance, finalTo.getBalance(), ERROR_TOLERANCE);
 
 		// cleanup
 
