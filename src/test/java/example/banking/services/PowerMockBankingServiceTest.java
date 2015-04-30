@@ -67,6 +67,7 @@ public class PowerMockBankingServiceTest {
 	}
 
 	@Test
+	@PrepareForTest(ConfigurationService.class)
 	public void testTransferFromNonExistingAccount()
 			throws InsufficientBalanceException {
 
@@ -101,6 +102,7 @@ public class PowerMockBankingServiceTest {
 	}
 
 	@Test
+	@PrepareForTest(ConfigurationService.class)
 	public void testTransferToNonExistingAccount()
 			throws InsufficientBalanceException {
 
@@ -135,6 +137,7 @@ public class PowerMockBankingServiceTest {
 	}
 
 	@Test
+	@PrepareForTest(ConfigurationService.class)
 	public void testTransferWithInsufficientBalance()
 			throws AccountNotFoundException {
 
