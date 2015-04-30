@@ -1,5 +1,7 @@
 package example.banking.domain;
 
+import example.banking.services.InsufficientBalanceException;
+
 public class Account {
 
 	private Integer id;
@@ -28,7 +30,8 @@ public class Account {
 		return owner;
 	}
 	
-	public void withdraw(double amount) {
+	public void withdraw(double amount) throws InsufficientBalanceException {
+		if ( balance < amount) throw new InsufficientBalanceException(id,balance,amount);
 		this.balance -= amount;
 	}
 

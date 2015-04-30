@@ -20,7 +20,7 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransfer() throws AccountNotFoundException {
+	public void testTransfer() throws AccountNotFoundException, InsufficientBalanceException {
 		// assemble
 
 		// test fixtures
@@ -67,7 +67,7 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransferFromNonExistingAccount() {
+	public void testTransferFromNonExistingAccount() throws InsufficientBalanceException {
 		int fromAccountId = -1;
 		double amount = 1_000_000.00;
 		double targetBalance = 5.00;
@@ -88,7 +88,7 @@ public class BankingServiceTest {
 	}
 
 	@Test
-	public void testTransferToNonExistingAccount() {
+	public void testTransferToNonExistingAccount() throws InsufficientBalanceException {
 		double amount = 1_000_000.00;
 		double sourceBalance = 5.00;
 		String sourceOwner = "John Doe";
@@ -135,8 +135,9 @@ public class BankingServiceTest {
 			Assert.assertEquals(fromAccountId, e.getAccountId());
 			Assert.assertEquals(sourceBalance, e.getBalance(), ERROR_TOLERANCE);
 			Assert.assertEquals(amount, e.getWithdrawAmount(), ERROR_TOLERANCE);
-			String expected = String.format("Unable to withdraw %d from %s",
-					amount, fromAccount);
+			String expected = String.format(
+					"Unable to withdraw %s from Account id=%s, balance=%s",
+					amount, fromAccountId, fromAccount.getBalance());
 			Assert.assertEquals(expected, e.getMessage());
 		}
 
