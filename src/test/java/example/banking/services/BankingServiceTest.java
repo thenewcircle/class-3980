@@ -11,9 +11,6 @@ public class BankingServiceTest {
 
 	private static final double ERROR_TOLERANCE = 0.00_001;
 
-	private AccountDao dao = new InMemoryAccountDao();
-	private BankingService teller = new SimpleBankingService(dao);
-
 	@Test
 	public void testHelloWorld() {
 		Assert.assertEquals(1, 1);
@@ -22,7 +19,10 @@ public class BankingServiceTest {
 	@Test
 	public void testTransfer() throws AccountNotFoundException,
 			InsufficientBalanceException {
+
 		// assemble
+		AccountDao dao = new InMemoryAccountDao();
+		BankingService teller = new SimpleBankingService(dao);
 
 		// test fixtures
 		double sourceBalance = 10_000_000.00;
@@ -55,6 +55,7 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountNotFoundInGet() {
+		AccountDao dao = new InMemoryAccountDao();
 		int nonExistingAccountId = -1;
 		Account account = dao.find(nonExistingAccountId);
 		Assert.assertNull(account);
@@ -62,6 +63,7 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountNotFoundStartingWithDefaultPrimaryKey() {
+		AccountDao dao = new InMemoryAccountDao();
 		int nonExistingAccountId = 1;
 		Account account = dao.find(nonExistingAccountId);
 		Assert.assertNull(account);
@@ -70,6 +72,10 @@ public class BankingServiceTest {
 	@Test
 	public void testTransferFromNonExistingAccount()
 			throws InsufficientBalanceException {
+
+		AccountDao dao = new InMemoryAccountDao();
+		BankingService teller = new SimpleBankingService(dao);
+
 		int fromAccountId = -1;
 		double amount = 1_000_000.00;
 		double targetBalance = 5.00;
@@ -92,6 +98,10 @@ public class BankingServiceTest {
 	@Test
 	public void testTransferToNonExistingAccount()
 			throws InsufficientBalanceException {
+
+		AccountDao dao = new InMemoryAccountDao();
+		BankingService teller = new SimpleBankingService(dao);
+
 		double amount = 1_000_000.00;
 		double sourceBalance = 5.00;
 		String sourceOwner = "John Doe";
@@ -116,6 +126,8 @@ public class BankingServiceTest {
 			throws AccountNotFoundException {
 
 		// assemble
+		AccountDao dao = new InMemoryAccountDao();
+		BankingService teller = new SimpleBankingService(dao);
 
 		// test fixture (test data)
 		double sourceBalance = 10.00;
@@ -164,6 +176,7 @@ public class BankingServiceTest {
 
 	@Test
 	public void testAccountInDatabaseId() {
+		AccountDao dao = new InMemoryAccountDao();
 		Account account = dao.create("Jill Doe", 1_000.0);
 		Assert.assertNotNull(account.getId());
 	}
