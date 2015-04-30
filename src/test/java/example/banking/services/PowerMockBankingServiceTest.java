@@ -2,20 +2,38 @@ package example.banking.services;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import example.banking.dao.AccountDao;
 import example.banking.dao.AccountNotFoundException;
+import example.banking.dao.InMemoryAccountDao;
 import example.banking.domain.Account;
 
+@RunWith(PowerMockRunner.class)
 public class PowerMockBankingServiceTest {
 
 	private static final double ERROR_TOLERANCE = 0.00_001;
 
 	@Test
+	@PrepareForTest(ConfigurationService.class)
 	public void testTransfer() throws AccountNotFoundException,
 			InsufficientBalanceException {
 
 		// assemble
+		AccountDao dummyDao = new InMemoryAccountDao();
+		BankingService dummyTeller = new SimpleBankingService(dummyDao);
+
+		PowerMockito.mockStatic(ConfigurationService.class);
+		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+
+		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
+				dummyTeller);
+
+		// now powermock will substitute static calls with our objects
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
 
@@ -52,6 +70,14 @@ public class PowerMockBankingServiceTest {
 	public void testTransferFromNonExistingAccount()
 			throws InsufficientBalanceException {
 
+		AccountDao dummyDao = new InMemoryAccountDao();
+		BankingService dummyTeller = new SimpleBankingService(dummyDao);
+
+		PowerMockito.mockStatic(ConfigurationService.class);
+		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
+				dummyTeller);
+
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
 
@@ -77,6 +103,14 @@ public class PowerMockBankingServiceTest {
 	@Test
 	public void testTransferToNonExistingAccount()
 			throws InsufficientBalanceException {
+
+		AccountDao dummyDao = new InMemoryAccountDao();
+		BankingService dummyTeller = new SimpleBankingService(dummyDao);
+
+		PowerMockito.mockStatic(ConfigurationService.class);
+		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
+				dummyTeller);
 
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
@@ -105,6 +139,14 @@ public class PowerMockBankingServiceTest {
 			throws AccountNotFoundException {
 
 		// assemble
+		AccountDao dummyDao = new InMemoryAccountDao();
+		BankingService dummyTeller = new SimpleBankingService(dummyDao);
+
+		PowerMockito.mockStatic(ConfigurationService.class);
+		Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyDao);
+		Mockito.when(ConfigurationService.getBankingService()).thenReturn(
+				dummyTeller);
+
 		AccountDao dao = ConfigurationService.getAccountDao();
 		BankingService teller = ConfigurationService.getBankingService();
 
