@@ -36,6 +36,12 @@ public class BankingServiceTestWithMockito {
 
 		teller.transfer(fromId, toId, amount);
 
+		Mockito.verify(dao).find(fromId);
+		Mockito.verify(dao).find(toId);
+
+		Mockito.verify(dao).update(fromAccount);
+		Mockito.verify(dao).update(toAccount);
+
 		Account finalFromAccount = dao.find(fromId);
 		Account finalToAccount = dao.find(toId);
 		Assert.assertEquals(fromOwner, finalFromAccount.getOwner());
@@ -77,6 +83,9 @@ public class BankingServiceTestWithMockito {
 			Assert.assertEquals(expected, e.getMessage());
 			Assert.assertEquals(fromId, e.getAccountId());
 		}
+
+		Mockito.verify(dao).find(fromId);
+
 	}
 
 	@Test
@@ -88,18 +97,18 @@ public class BankingServiceTestWithMockito {
 
 		double fromBalance = 5.00;
 		String fromOwner = "John Doe";
-		int fromAccountId = 1;
+		int fromId = 1;
 
 		int toId = -1;
 
 		double amount = 1_000_000.00;
 
-		Account fromAccount = new Account(fromAccountId, fromOwner, fromBalance);
-		Mockito.when(dao.find(fromAccountId)).thenReturn(fromAccount);
+		Account fromAccount = new Account(fromId, fromOwner, fromBalance);
+		Mockito.when(dao.find(fromId)).thenReturn(fromAccount);
 		Mockito.when(dao.find(toId)).thenReturn(null);
 
 		try {
-			teller.transfer(fromAccountId, toId, amount);
+			teller.transfer(fromId, toId, amount);
 			Assert.fail("Did not catch AccountNotFoundException.");
 		} catch (AccountNotFoundException e) {
 			Assert.assertNotNull(e);
@@ -107,6 +116,10 @@ public class BankingServiceTestWithMockito {
 			Assert.assertEquals(expected, e.getMessage());
 			Assert.assertEquals(toId, e.getAccountId());
 		}
+
+		Mockito.verify(dao).find(fromId);
+		Mockito.verify(dao).find(toId);
+
 	}
 
 	@Test
@@ -144,6 +157,10 @@ public class BankingServiceTestWithMockito {
 					amount, fromId, fromAccount.getBalance());
 			Assert.assertEquals(expected, e.getMessage());
 		}
+
+
+		Mockito.verify(dao).find(fromId);
+		Mockito.verify(dao).find(toId);
 
 		Account finalFromAccount = dao.find(fromId);
 		Account finalToAccount = dao.find(toId);
